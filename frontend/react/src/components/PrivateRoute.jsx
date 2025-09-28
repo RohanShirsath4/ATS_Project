@@ -10,7 +10,7 @@ const PrivateRoute = ({ children, adminOnly = false }) => {
   }
 
   if (adminOnly && currentUser.role !== 'admin') {
-    return <Navigate to="/dashboard" />;
+    return <Navigate to="/attendance" />;
   }
 
   return children;

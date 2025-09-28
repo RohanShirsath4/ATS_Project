@@ -47,7 +47,7 @@ export const AuthProvider = ({ children }) => {
       
       axios.defaults.headers.common['Authorization'] = `Bearer ${newToken}`;
       
-      return { success: true };
+      return { success: true, user };
     } catch (error) {
       return { 
         success: false, 
@@ -67,13 +67,12 @@ export const AuthProvider = ({ children }) => {
       
       axios.defaults.headers.common['Authorization'] = `Bearer ${newToken}`;
       
-      return { success: true };
+      return { success: true, user };
     } catch (error) {
       return { 
         success: false, 
         message: error.response?.data?.message || 'Registration failed' 
       };
-
     }
   };
 

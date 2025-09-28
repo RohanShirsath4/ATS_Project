@@ -110,10 +110,10 @@ const Attendance = () => {
   }
 
   return (
-    <Container>
+    <Container className=' h-100 '>
       <Row className="mb-4">
         <Col>
-          <h1 className="display-5 fw-bold">Attendance Management</h1>
+          <h1 className="display-5 fw-bold mt-5">Attendance Management</h1>
           <p className="lead">Track and manage your attendance records</p>
         </Col>
       </Row>
@@ -158,8 +158,7 @@ const Attendance = () => {
                       <p><strong>Hours Worked:</strong></p>
                       <p className="fs-4 text-primary">{todayAttendance.hoursWorked} hours</p>
                     </div>
-                  )}
-                  
+                  )}     
                   {!todayAttendance.checkOut && (
                     <Button 
                       variant="warning" 
@@ -182,7 +181,6 @@ const Attendance = () => {
                     size="lg"
                     onClick={markAttendance}
                   >
-                    <i className="bi bi-check-circle me-2"></i>
                     Mark Attendance
                   </Button>
                 
@@ -234,7 +232,7 @@ const Attendance = () => {
             <Card.Header className="bg-secondary text-white">
               <h5 className="mb-0">
                 <i className="bi bi-clock-history me-2"></i>
-                Attendance History (Last 30 Days)
+                Attendance History
               </h5>
             </Card.Header>
             <Card.Body>
@@ -291,23 +289,7 @@ const Attendance = () => {
               onChange={(e) => setReportDate(e.target.value)}
             />
           </Form.Group>
-          
-          {/* <div className="text-center">
-            <Button variant="primary" onClick={generateReport} disabled={reportLoading}>
-              {reportLoading ? (
-                <>
-                  <Spinner animation="border" size="sm" className="me-2" />
-                  Generating Report...
-                </>
-              ) : (
-                <>
-                  <i className="bi bi-file-earmark-arrow-down me-2"></i>
-                  Generate Report
-                </>
-              )}
-            </Button>
-          </div> */}
-          
+
           {reportData.length > 0 && (
             <div className="mt-4">
               <h6>Attendance for {new Date(reportDate).toLocaleDateString()}</h6>

@@ -9,7 +9,6 @@ import Register from './pages/Register';
 import AdminDashboard from './pages/AdminDashboard';
 import Attendance from './pages/Attendance';
 import Leave from './pages/Leave';
-import Dashboard from './pages/Dashboard';
 import './App.css';
 // import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 
@@ -18,7 +17,7 @@ function App() {
   return (   
     <AuthProvider>
       <Router>
-        <div className="App">
+        <div className="App h-100">
           <Navbar />
           <div className="container mt-4">
             <Routes>
@@ -60,7 +59,7 @@ function App() {
             </Routes>
           </div>
         </div>
-      <Footer/>
+     <Footer/>   
       </Router>
     </AuthProvider>
   );

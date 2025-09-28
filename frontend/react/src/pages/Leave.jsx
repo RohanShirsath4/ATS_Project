@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { 
-  Container, 
-  Row, 
-  Col, 
-  Card, 
-  Button, 
-  Alert, 
-  Table, 
+import {
+  Container,
+  Row,
+  Col,
+  Card,
+  Button,
+  Alert,
+  Table,
   Badge,
   Spinner,
   Modal,
@@ -15,7 +15,7 @@ import {
 import { useAuth } from '../context/AuthContext';
 import axios from 'axios';
 import { redirect } from 'react-router-dom';
-
+import '../App.css'
 const Leave = () => {
   const { currentUser } = useAuth();
   const [leaveRequests, setLeaveRequests] = useState([]);
@@ -30,8 +30,6 @@ const Leave = () => {
   const [message, setMessage] = useState('');
   const [myLeaves, setMyLeaves] = useState([]);
 
-  // const [showDetailsModal, setShowDetailsModal] = useState(false);
-  // const [selectedLeave, setSelectedLeave] = useState(null);
   const [stats, setStats] = useState({
     total: 0,
     pending: 0,
@@ -43,7 +41,7 @@ const Leave = () => {
     fetchLeaveRequests();
   }, []);
 
-  
+
   useEffect(() => {
     const intervalId = setInterval(() => {
       fetchLeaveRequests();
@@ -64,35 +62,35 @@ const Leave = () => {
 
 
 
- 
+
   const fetchLeaveRequests = async () => {
     try {
       setLoading(true);
       // const result = await axios.get('/api/leave/');
-       const res = await axios.get('/api/leave/records');
-       console.log(res.data)
+      const res = await axios.get('/api/leave/records');
+      console.log(res.data)
       setLeaveRequests(res.data.summary);
- 
+
       calculateStats(res.data.records);
     } catch (error) {
       // console.error(error);
-      setMessage('Error loading leave requests',error);
+      setMessage('Error loading leave requests', error);
     } finally {
       setLoading(false);
     }
   };
 
   const fetchMyLeaves = async () => {
-  try {
-    const res = await axios.get('/api/leave/my-requests');
-    setMyLeaves(res.data); // expects an array
-  } catch (error) {
-    console.error('Failed to load my leaves', error);
-  }
-};
-fetchMyLeaves()
+    try {
+      const res = await axios.get('/api/leave/my-requests');
+      setMyLeaves(res.data);
+    } catch (error) {
+      console.error('Failed to load my leaves', error);
+    }
+  };
+  fetchMyLeaves()
 
- 
+
 
   const calculateStats = (Leaves) => {
     const stats = {
@@ -116,17 +114,17 @@ fetchMyLeaves()
       setMessage('Start date cannot be after end date');
       return;
     }
-    
+
     try {
       setLoading(true);
       setMessage('');
-      
+
       await axios.post('/api/leave/apply', formData);
       setMessage('Leave application submitted successfully!');
       setShowForm(false);
-      setFormData({ 
-        startDate: '', 
-        endDate: '', 
+      setFormData({
+        startDate: '',
+        endDate: '',
         reason: '',
         leaveType: 'casual'
       });
@@ -138,27 +136,8 @@ fetchMyLeaves()
     }
   };
 
-  // const viewLeaveDetails = (leave) => {
-  //   setSelectedLeave(leave);
-  //   setShowDetailsModal(true);
-  // };
-
-  const cancelLeave = async (leaveId) => {
-    if (!window.confirm('Are you sure you want to cancel this leave request?')) {
-      return;
-    }
-    
-    try {
-      setLoading(true);
-      await axios.delete(`/api/leave/${leaveId}`);
-      setMessage('Leave request cancelled successfully!');
-      fetchLeaveRequests();
-    } catch (error) {
-      setMessage(error.response?.data?.message || 'Error cancelling leave request');
-    } finally {
-      setLoading(false);
-    }
-  };
+;
+ 
 
   const getStatusBadge = (status) => {
     switch (status) {
@@ -173,26 +152,12 @@ fetchMyLeaves()
     }
   };
 
-  const getLeaveTypeBadge = (type) => {
-    switch (type) {
-      case 'casual':
-        return 'primary';
-      case 'sick':
-        return 'info';
-      case 'vacation':
-        return 'success';
-      case 'emergency':
-        return 'danger';
-      default:
-        return 'secondary';
-    }
-  };
-
+  
   const calculateLeaveDays = (startDate, endDate) => {
     const start = new Date(startDate);
     const end = new Date(endDate);
     const timeDiff = end.getTime() - start.getTime();
-    return Math.ceil(timeDiff / (1000 * 3600 * 24)) + 1;  
+    return Math.ceil(timeDiff / (1000 * 3600 * 24)) + 1;
   };
 
   const formatDate = (dateString) => {
@@ -206,7 +171,7 @@ fetchMyLeaves()
 
   if (loading && leaveRequests.length === 0) {
     return (
-      <Container className="text-center py-5">
+      <Container className="text-center">
         <Spinner animation="border" role="status" variant="primary">
           <span className="visually-hidden">Loading...</span>
         </Spinner>
@@ -216,24 +181,15 @@ fetchMyLeaves()
   }
 
   return (
-    <Container>
+    <Container className='leaveApply'>
       <Row className="mb-4">
         <Col>
           <div className="d-flex align-items-center justify-content-between">
             <div>
-              <h1 className="display-5 fw-bold mb-0">Leave Management</h1>
+              <h1 className="display-5 fw-bold mt-5">Leave Management</h1>
               <p className="lead mb-0">Apply for leave and track your requests</p>
             </div>
-            <div>
-              <Button 
-                variant="outline-secondary"
-                onClick={fetchLeaveRequests && fetchLeaveRequests }
-                
-                disabled={loading}
-              >
-                Refresh
-              </Button>
-            </div>
+             
           </div>
         </Col>
       </Row>
@@ -255,7 +211,7 @@ fetchMyLeaves()
             </Card.Body>
           </Card>
         </Col>
-        
+
         <Col md={3} className="mb-3">
           <Card className="h-100 border-0 shadow-sm text-center">
             <Card.Body>
@@ -267,7 +223,7 @@ fetchMyLeaves()
             </Card.Body>
           </Card>
         </Col>
-        
+
         <Col md={3} className="mb-3">
           <Card className="h-100 border-0 shadow-sm text-center">
             <Card.Body>
@@ -279,7 +235,7 @@ fetchMyLeaves()
             </Card.Body>
           </Card>
         </Col>
-        
+
         <Col md={3} className="mb-3">
           <Card className="h-100 border-0 shadow-sm text-center">
             <Card.Body>
@@ -292,74 +248,74 @@ fetchMyLeaves()
           </Card>
         </Col>
       </Row>
-<Row className="mb-5">
-  <Col>
-    <Card className="border-0 shadow-sm">
-      <Card.Header className="bg-secondary text-white">
-        <h5 className="mb-0">
-          <i className="bi bi-list-ul me-2"></i>
-          My Leave Requests
-        </h5>
-      </Card.Header>
-      <Card.Body>
-        {myLeaves.length === 0 ? (
-          <p>No leave requests found.</p>
-        ) : (
-          <Table striped bordered responsive>
-            <thead>
-              <tr>
-                {/* <th>Type</th> */}
-                <th>Start</th>
-                <th>End</th>
-                <th>Days</th>
-                <th>Status</th>
-                <th>Applied On</th>
-                <th>Reason</th>
-              </tr>
-            </thead>
-            <tbody>
-              {myLeaves.map((leave) => (
-                <tr key={leave._id}>
-                  {/* <td>
+      <Row className="mb-5">
+        <Col>
+          <Card className="border-0 shadow-sm ">
+            <Card.Header className="bg-secondary text-white">
+              <h5 className="mb-0">
+                <i className="bi bi-list-ul me-2"></i>
+                My Leave Requests
+              </h5>
+            </Card.Header>
+            <Card.Body>
+              {myLeaves.length === 0 ? (
+                <p>No leave requests found.</p>
+              ) : (
+                <Table striped bordered responsive>
+                  <thead>
+                    <tr>
+                      {/* <th>Type</th> */}
+                      <th>Start</th>
+                      <th>End</th>
+                      <th>Days</th>
+                      <th>Status</th>
+                      <th>Applied On</th>
+                      <th>Reason</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {myLeaves.map((leave) => (
+                      <tr key={leave._id}>
+                        {/* <td>
                     <Badge bg={getLeaveTypeBadge(leave.leaveType)}>
                       {leave.leaveType}
                     </Badge>
                   </td> */}
-                  <td>{formatDate(leave.startDate)}</td>
-                  <td>{formatDate(leave.endDate)}</td>
-                  <td>{calculateLeaveDays(leave.startDate, leave.endDate)}</td>
-                  <td>
-                    <Badge bg={getStatusBadge(leave.status)}>
-                      {leave.status}
-                    </Badge>
-                  </td>
-                  <td>{formatDate(leave.appliedOn)}</td>
-                  <td>{leave.reason}</td>
-                </tr>
-              ))}
-            </tbody>
-          </Table>
-        )}
-      </Card.Body>
-    </Card>
-  </Col>
-</Row>
+                        <td>{formatDate(leave.startDate)}</td>
+                        <td>{formatDate(leave.endDate)}</td>
+                        <td>{calculateLeaveDays(leave.startDate, leave.endDate)}</td>
+                        <td>
+                          <Badge bg={getStatusBadge(leave.status)}>
+                            {leave.status}
+                          </Badge>
+                        </td>
+                        <td>{formatDate(leave.appliedOn)}</td>
+                        <td>{leave.reason}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </Table>
+              )}
+            </Card.Body>
+          </Card>
+        </Col>
+      </Row>
 
       <Row className="mb-4">
         <Col>
-          <Button 
-            variant="dark" 
+          <Button
+            variant="dark"
             onClick={() => setShowForm(!showForm)}
             className="me-2"
           >
             <i className={`bi ${showForm ? 'bi-x-circle' : 'bi-plus-circle'} me-2`}></i>
-            {showForm ? 'Cancel' : 'Apply for Leave'}
+            {showForm ? 'Cancel' : 'Apply for leave'}
           </Button>
-          
+          {/*          <<<<<<<<<<<<<<<<<<<<<<<<<<<  Admin side   >>>>>>>>>>>>>>>>>>>>>>>>>      */}
           {currentUser.role === 'admin' && (
-            <Button 
-              variant="outline-info" 
-              as="a" 
+            <Button
+              variant="outline-info"
+              as="a"
               href="/admin#leaves"
             >
               <i className="bi bi-gear me-2"></i>
@@ -371,14 +327,14 @@ fetchMyLeaves()
       {showForm && (
         <Row className="mb-4">
           <Col>
-            <Card className="border-0 shadow-sm">
+            <Card className="border-0 shadow-sm" style={{ marginBottom: 0 }}>
               <Card.Header className="bg-dark text-white">
                 <h5 className="mb-0">
                   <i className="bi bi-pencil-square me-2"></i>
                   New Leave Application
                 </h5>
               </Card.Header>
-              <Card.Body>
+              <Card.Body style={{ paddingBottom: '1.5rem' }}>
                 <Form onSubmit={handleSubmit}>
                   <Row>
                     <Col md={6}>
@@ -397,7 +353,7 @@ fetchMyLeaves()
                         </Form.Select>
                       </Form.Group>
                     </Col>
-                    
+
                     <Col md={6}>
                       <Form.Group className="mb-3">
                         <Form.Label>
@@ -406,7 +362,7 @@ fetchMyLeaves()
                       </Form.Group>
                     </Col>
                   </Row>
-                  
+
                   <Row>
                     <Col md={6}>
                       <Form.Group className="mb-3">
@@ -421,7 +377,7 @@ fetchMyLeaves()
                         />
                       </Form.Group>
                     </Col>
-                    
+
                     <Col md={6}>
                       <Form.Group className="mb-3">
                         <Form.Label>End Date</Form.Label>
@@ -436,7 +392,7 @@ fetchMyLeaves()
                       </Form.Group>
                     </Col>
                   </Row>
-                  
+
                   <Form.Group className="mb-3">
                     <Form.Label>Reason</Form.Label>
                     <Form.Control
@@ -449,9 +405,9 @@ fetchMyLeaves()
                       required
                     />
                   </Form.Group>
-                  
-                  <Button 
-                    variant="dark" 
+
+                  <Button
+                    variant="dark"
                     type="submit"
                     disabled={loading}
                   >
