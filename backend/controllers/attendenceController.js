@@ -102,4 +102,24 @@ try {
     res.status(500).json({ message: 'server error' });
   }
 };
-``
+exports.getTodayAttendance = async (req, res) => {
+  try {
+    const userId = req.userId;
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    const attendance = await Attendance.findOne({
+      user: userId,
+      date: { $gte: today }
+    });
+
+    if (!attendance) {
+      return res.json(null); // no record today
+    }
+
+    res.json(attendance);
+  } catch (error) {
+    console.error('Error fetching today\'s attendance:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+};

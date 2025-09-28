@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import '../App.css'
 
 const AdminDashboard = () => {
   const [activeTab, setActiveTab] = useState('employees');
@@ -64,30 +65,65 @@ const AdminDashboard = () => {
 
   const renderEmployeesTab = () => (
     <div>
-      <h4>All Employees</h4>
+      <div className="d-flex align-items-center mb-4">
+        <i className="bi bi-people-fill me-2" style={{ color: '#6b5b95', fontSize: '1.5rem' }}></i>
+        <h4 className="mb-0 fw-bold" style={{ color: '#6b5b95' }}>All Employees</h4>
+        <span className="badge bg-primary ms-3">{employees.length} Total</span>
+      </div>
       {employees.length > 0 ? (
-        <table className="table table-striped">
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Email</th>
-              <th>Join Date</th>
-              <th>Role</th>
-            </tr>
-          </thead>
-          <tbody>
-            {employees.map(employee => (
-              <tr key={employee._id}>
-                <td>{employee.name}</td>
-                <td>{employee.email}</td>
-                <td>{new Date(employee.joiningDate).toLocaleDateString()}</td>
-                <td>{employee.role}</td>
+        <div className="table-responsive">
+          <table className="table table-hover align-middle">
+            <thead className="table-light">
+              <tr>
+                <th className="border-0 fw-semibold">
+                  <i className="bi bi-person me-2"></i>Name
+                </th>
+                <th className="border-0 fw-semibold">
+                  <i className="bi bi-envelope me-2"></i>Email
+                </th>
+                <th className="border-0 fw-semibold">
+                  <i className="bi bi-calendar me-2"></i>Join Date
+                </th>
+                <th className="border-0 fw-semibold">
+                  <i className="bi bi-person-badge me-2"></i>Role
+                </th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {employees.map(employee => (
+                <tr key={employee._id} className="border-0">
+                  <td className="border-0">
+                    <div className="d-flex align-items-center">
+                      <div 
+                        className="bg-primary rounded-circle d-flex align-items-center justify-content-center me-3"
+                        style={{ width: '40px', height: '40px' }}
+                      >
+                        <i className="bi bi-person text-white"></i>
+                      </div>
+                      <span className="fw-medium">{employee.name}</span>
+                    </div>
+                  </td>
+                  <td className="border-0 text-muted">{employee.email}</td>
+                  <td className="border-0">
+                    <span className="badge bg-light text-dark">
+                      {new Date(employee.joiningDate).toLocaleDateString()}
+                    </span>
+                  </td>
+                  <td className="border-0">
+                    <span className={`badge ${employee.role === 'admin' ? 'bg-danger' : 'bg-success'}`}>
+                      {employee.role}
+                    </span>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       ) : (
-        <p>No employees found.</p>
+        <div className="text-center py-5">
+          <i className="bi bi-people text-muted" style={{ fontSize: '3rem' }}></i>
+          <p className="text-muted mt-3">No employees found.</p>
+        </div>
       )}
     </div>
   );
@@ -254,54 +290,100 @@ const AdminDashboard = () => {
   };
 
   return (
-    <div>
-      <h1>Admin Dashboard</h1>
+    <div className="admin-dashboard flex-grow-1 d-flex flex-column mt-5"
+    style={{backgroundColor:'#6b5b95'}}>
+      <div className="mb-5">
+        <div className="d-flex align-items-center mb-4">
+          <div>
+            <h1 className="display-5 fw-bold mb-1"  >
+              Admin Dashboard
+            </h1>
+            <p className="text-muted mb-0">Manage your organization's attendance and leave system</p>
+          </div>
+        </div>
+      </div>
       
-      <ul className="nav nav-tabs mt-4">
-        <li className="nav-item">
-          <button 
-            className={`nav-link ${activeTab === 'employees' ? 'active' : ''}`}
-            onClick={() => setActiveTab('employees')}
-          >
-            Employees
-          </button>
-        </li>
-        <li className="nav-item">
-          <button 
-            className={`nav-link ${activeTab === 'attendance' ? 'active' : ''}`}
-            onClick={() => setActiveTab('attendance')}
-          >
-            Attendance
-          </button>
-        </li>
-        <li className="nav-item">
-          <button 
-            className={`nav-link ${activeTab === 'leaves' ? 'active' : ''}`}
-            onClick={() => setActiveTab('leaves')}
-          >
-            Leave Requests
-          </button>
-        </li>
-        <li className="nav-item">
-          <button 
-            className={`nav-link ${activeTab === 'late' ? 'active' : ''}`}
-            onClick={() => setActiveTab('late')}
-          >
-            Late Employees
-          </button>
-        </li>
-      </ul>
-      
-      <div className="tab-content mt-3">
+      <div className="mb-4">
+        <ul className="nav nav-pills nav-fill bg-light p-2 rounded-3 shadow-sm">
+          <li className="nav-item">
+            <button 
+              className={`nav-link border-0 fw-medium ${activeTab === 'employees' ? 'active' : ''}`}
+              onClick={() => setActiveTab('employees')}
+              style={{
+                borderRadius: '10px',
+                transition: 'all 0.3s ease',
+                backgroundColor: activeTab === 'employees' ? '#6b5b95' : 'transparent',
+                color: activeTab === 'employees' ? 'white' : '#6b5b95'
+              }}
+            >
+              <i className="bi bi-people me-2"></i>
+              Employees
+            </button>
+          </li>
+          <li className="nav-item">
+            <button 
+              className={`nav-link border-0 fw-medium ${activeTab === 'attendance' ? 'active' : ''}`}
+              onClick={() => setActiveTab('attendance')}
+              style={{
+                borderRadius: '10px',
+                transition: 'all 0.3s ease',
+                backgroundColor: activeTab === 'attendance' ? '#6b5b95' : 'transparent',
+                color: activeTab === 'attendance' ? 'white' : '#6b5b95'
+              }}
+            >
+              <i className="bi bi-calendar-check me-2"></i>
+              Attendance
+            </button>
+          </li>
+          <li className="nav-item">
+            <button 
+              className={`nav-link border-0 fw-medium ${activeTab === 'leaves' ? 'active' : ''}`}
+              onClick={() => setActiveTab('leaves')}
+              style={{
+                borderRadius: '10px',
+                transition: 'all 0.3s ease',
+                backgroundColor: activeTab === 'leaves' ? '#6b5b95' : 'transparent',
+                color: activeTab === 'leaves' ? 'white' : '#6b5b95'
+              }}
+            >
+              <i className="bi bi-calendar-event me-2"></i>
+              Leave Requests
+            </button>
+          </li>
+          <li className="nav-item">
+            <button 
+              className={`nav-link border-0 fw-medium ${activeTab === 'late' ? 'active' : ''}`}
+              onClick={() => setActiveTab('late')}
+              style={{
+                borderRadius: '10px',
+                transition: 'all 0.3s ease',
+                backgroundColor: activeTab === 'late' ? '#6b5b95' : 'transparent',
+                color: activeTab === 'late' ? 'white' : '#6b5b95'
+              }}
+            >
+              <i className="bi bi-clock-history me-2"></i>
+              Late Employees
+            </button>
+          </li>
+        </ul>
+      </div>
+      <div className="tab-content flex-grow-1">
         {loading ? (
-          <div className="text-center">Loading...</div>
+          <div className="d-flex justify-content-center align-items-center" style={{ minHeight: '400px' }}>
+            <div className="text-center">
+              <div className="spinner-border text-primary mb-3" role="status" style={{ width: '3rem', height: '3rem' }}>
+                <span className="visually-hidden">Loading...</span>
+              </div>
+              <p className="text-muted">Loading data...</p>
+            </div>
+          </div>
         ) : (
-          <>
+          <div className="bg-white rounded-3 shadow-sm p-4" style={{ minHeight: '500px' }}>
             {activeTab === 'employees' && renderEmployeesTab()}
             {activeTab === 'attendance' && renderAttendanceTab()}
             {activeTab === 'leaves' && renderLeavesTab()}
             {activeTab === 'late' && renderLateEmployeesTab()}
-          </>
+          </div>
         )}
       </div>
     </div>
