@@ -153,19 +153,19 @@ const Attendance = () => {
                     </Col>
                   </Row>
                   
-                  {todayAttendance.hoursWorked && (
+                  {todayAttendance.hoursWorked ? (
                     <div className="mt-3">
                       <p><strong>Hours Worked:</strong></p>
                       <p className="fs-4 text-primary">{todayAttendance.hoursWorked} hours</p>
                     </div>
-                  )}     
+                  ) : null}     
                   {!todayAttendance.checkOut && (
                     <Button 
                       variant="warning" 
                       className="mt-3"
                       onClick={markCheckout}
                     >
-                      <i className="bi bi-box-arrow-right me-2"></i>
+                      {/* <i className="bi bi-box-arrow-right me-2"></i> */}
                       Mark Check-out
                     </Button>
                   )}

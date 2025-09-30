@@ -46,7 +46,7 @@ const Login = () => {
         overflow: 'hidden'
       }}
     >
-      {/* Background decorative elements */}
+
       <div 
         style={{
           position: 'absolute',
