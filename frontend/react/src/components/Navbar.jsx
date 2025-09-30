@@ -212,16 +212,7 @@ const Navbar = () => {
               </>
             ) : (
               <>
-                {/* <li className="nav-item">
-                  <Link className="nav-link" to="/login" onClick={handleLinkClick}>
-                    Login
-                  </Link>
-                </li>
-                <li className="nav-item">
-                  <Link className="nav-link" to="/register" onClick={handleLinkClick}>
-                    Register
-                  </Link>
-                </li> */}
+          
               </>
             )}
           </ul>

@@ -114,7 +114,7 @@ exports.getTodayAttendance = async (req, res) => {
     });
 
     if (!attendance) {
-      return res.json(null); // no record today
+      return res.json(null);  
     }
 
     res.json(attendance);

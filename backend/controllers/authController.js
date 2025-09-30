@@ -1,25 +1,34 @@
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 
 exports.register = async (req, res) => {
-
+  try {
     const { name, email, password, role } = req.body;
-    const hashPass = await bcrypt.hash(password,10)
+
+    if (!name || !email || !password) {
+      return res.status(400).json({ message: 'Name, email and password are required' });
+    }
+
     const existingUser = await User.findOne({ email });
     if (existingUser) {
       return res.status(400).json({ message: 'User already exists' });
     }
-    
-    const user = new User({ name, email, password:hashPass, role });
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const user = new User({ name, email, password: hashedPassword, role });
     await user.save();
-    
+
+    if (!process.env.JWT_SECRET) {
+      return res.status(500).json({ message: 'Server misconfiguration: JWT_SECRET not set' });
+    }
+
     const token = jwt.sign(
-      { userId: user._id }, 
-      process.env.JWT_SECRET, 
+      { userId: user._id },
+      process.env.JWT_SECRET,
       { expiresIn: '7d' }
     );
-    
+
     res.status(201).json({
       token,
       user: {
@@ -29,7 +38,9 @@ exports.register = async (req, res) => {
         role: user.role
       }
     });
- 
+  } catch (error) {
+    res.status(500).json({ message: 'Registration failed', error: error.message });
+  }
 };
 
 exports.login = async (req, res) => {
@@ -40,9 +51,12 @@ exports.login = async (req, res) => {
     if (!user) {
       return res.status(400).json({ message: 'Invalid credentials' });
     }
-    const  checkPass = await bcrypt.compare(password,user.password)
+    const checkPass = await bcrypt.compare(password, user.password)
     if (!checkPass) {
       return res.status(400).json({ message: 'Invalid credentials' });
+    }
+    if (!process.env.JWT_SECRET) {
+      return res.status(500).json({ message: 'Server misconfiguration: JWT_SECRET not set' });
     }
     const token = jwt.sign(
       { userId: user._id }, 
@@ -60,7 +74,7 @@ exports.login = async (req, res) => {
       }
     });
   } catch (error) {
-    res.status(500).send(error)
+    res.status(500).json({ message: 'Login failed', error: error.message })
   }
 };
 exports.getCurrentUser = async (req, res) => {
