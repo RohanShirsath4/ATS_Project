@@ -6,7 +6,7 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        target: 'https://ats-system-68xk.onrender.com',
+        target: 'https://ats-backend-pvbk.onrender.com',
         changeOrigin: true,
         secure: false
       }
