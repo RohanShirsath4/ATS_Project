@@ -29,6 +29,24 @@ const Attendance = () => {
     fetchAttendanceData();
   }, []);
 
+  const refetchRecords = async () => {
+    try {
+      const recordsRes = await axios.get('/api/attendance/records?limit=30');
+      setAttendanceRecords(recordsRes.data.records);
+    } catch (error) {
+      console.error('Background refetch records failed:', error);
+    }
+  };
+
+  const refetchToday = async () => {
+    try {
+      const todayRes = await axios.get('/api/attendance/today');
+      setTodayAttendance(todayRes.data);
+    } catch (error) {
+      console.error("Background refetch today's attendance failed:", error);
+    }
+  };
+
   const fetchAttendanceData = async () => {
     try {
       setLoading(true);
@@ -37,7 +55,6 @@ const Attendance = () => {
         axios.get('/api/attendance/today'),
         axios.get('/api/attendance/records?limit=30')
       ]);
-      
       setTodayAttendance(todayRes.data);
       setAttendanceRecords(recordsRes.data.records);
     } catch (error) {
@@ -54,10 +71,17 @@ const Attendance = () => {
       const res = await axios.post('/api/attendance/mark');
       setTodayAttendance(res.data.attendance);
       setMessage('Attendance marked successfully!');
-      const recordsRes = await axios.get('/api/attendance/records?limit=30');
-      setAttendanceRecords(recordsRes.data.records);
+      setAttendanceRecords(prev => [
+        res.data.attendance,
+        ...prev.filter(r => r._id !== res.data.attendance._id)
+      ]);
+      refetchRecords();
+      refetchToday();
     } catch (error) {
       setMessage(error.response?.data?.message || 'Error marking attendance');
+   
+      refetchRecords();
+      refetchToday();
     }
   };
 
@@ -67,10 +91,13 @@ const Attendance = () => {
       const res = await axios.post('/api/attendance/checkout');
       setTodayAttendance(res.data.attendance);
       setMessage('Check-out marked successfully!');
-      const recordsRes = await axios.get('/api/attendance/records?limit=30');
-      setAttendanceRecords(recordsRes.data.records);
+      setAttendanceRecords(prev => prev.map(r => r._id === res.data.attendance._id ? res.data.attendance : r));
+      refetchRecords();
+      refetchToday();
     } catch (error) {
       setMessage(error.response?.data?.message || 'Error marking check-out');
+      refetchRecords();
+      refetchToday();
     }
   };
  const getStatusBadge = (status) => {
