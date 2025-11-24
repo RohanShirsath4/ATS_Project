@@ -6,8 +6,8 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        // target: 'https://ats-backend-pvbk.onrender.com',
-        target:'http://localhost:3500',
+        target: 'https://ats-backend-pvbk.onrender.com',
+        // target:'http://localhost:3500',
         changeOrigin: true,
         secure: false
       }
